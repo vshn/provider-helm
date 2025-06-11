@@ -4,6 +4,17 @@
 
 # provider-helm
 
+## Release VSHN-fork
+
+Rebase upstream `main` from `origin`(https://github.com/crossplane-contrib/provider-helm).
+
+```
+git tag $currentversion-vshn
+make build.all
+docker login ghcr.io
+.cache/tools/linux_aarch64/up-v0.28.0 xpkg push -f _output/xpkg/linux_amd64/provider-helm-$currentversion-vshn.xpkg ghcr.io/vshn/provider-helm:$currentversion-vshn -d
+```
+
 `provider-helm` is a Crossplane Provider that enables deployment and management
 of Helm Releases on Kubernetes clusters typically provisioned by Crossplane, and
 has the following functionality:
@@ -37,15 +48,15 @@ First install `provider-helm` with [additional
 configuration](./examples/provider-config/provider-incluster.yaml) to bind its
 service account to an existing role in the cluster:
 
-```console 
+```console
 kubectl apply -f ./examples/provider-config/provider-incluster.yaml
 ```
 
 Then simply create a
 [`ProviderConfig`](./examples/provider-config/provider-config-incluster.yaml)
 that uses an `InjectedIdentity` source:
-  
-```console 
+
+```console
 kubectl apply -f ./examples/provider-config/provider-config-incluster.yaml
 ```
 
@@ -57,7 +68,7 @@ release.yaml](examples/sample/release.yaml).
 kubectl create -f examples/sample/release.yaml
 ```
 
-## Design 
+## Design
 
 See [the design
 document](https://github.com/crossplane/crossplane/blob/master/design/one-pager-helm-provider.md).
@@ -85,7 +96,7 @@ using `kind` for local development):
 
 ```console
 KUBECONFIG=$(kind get kubeconfig | sed -e 's|server:\s*.*$|server: http://localhost:8081|g')
-kubectl -n crossplane-system create secret generic cluster-config --from-literal=kubeconfig="${KUBECONFIG}" 
+kubectl -n crossplane-system create secret generic cluster-config --from-literal=kubeconfig="${KUBECONFIG}"
 kubectl apply -f examples/provider-config/provider-config-with-secret.yaml
 ```
 
